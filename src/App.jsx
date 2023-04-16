@@ -1,18 +1,38 @@
 import { useState, useRef } from "react";
-import {
-  Circle,
-  Grid,
-  Edges,
-  Center,
-} from "@react-three/drei";
+import { Circle, Grid, Edges, Center, Instances } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
 import "./App.css";
 
 function App() {
-  
-  function CircleSmall(props) {
+  function getRandomArbitrary(min, max) {
+    return Math.random() * (max - min) + min;
+  }
+
+  <Instances 
+  limit={30}
+  range={30}
+  >
+    
+  </Instances>
+  function createCircleSmall({...props}) {
+    return (
+      <mesh>
+        <Circle args={[0.1, 150]}>
+          <meshBasicMaterial
+            attach="material"
+            transparent
+            color={rgba(
+              getRandom(0, 256),
+              getRandom(0, 256),
+              getRandom(0, 256)
+            )}
+          />
+        </Circle>
+      </mesh>
+    );
+  }
+  function CircleSmall({...props}) {
     const ref = useRef();
-    // Subscribe this component to the render-loop, rotate the mesh every frame
     useFrame(
       (state, delta) => (
         (ref.current.position.x += 0.01), (ref.current.position.y += 0.01)
@@ -36,29 +56,24 @@ function App() {
         <ambientLight intensity={0.5} />
         <Grid
           position={[0, 0, 0]}
-          // args={[15, 15]}
           infiniteGrid={true}
           cellSize={0.25}
           rotation={[Math.PI / 2, 0, 0]}
           fadeStrength={1}
           fadeDistance={10}
-          // cellColor={"#fff"}
           cellThickness={0.75}
-          sectionColor={'#7FFFD4'}
+          sectionColor={"#7FFFD4"}
           sectionSize={10}
         />
 
-        <CircleSmall></CircleSmall>
+        <CircleSmall />
         <Circle args={[3, 150]}>
           <Edges
             scale={1}
-            threshold={15} // Display edges only when the angle between two faces exceeds this value (default=15 degrees)
+            threshold={15}
             color="white"
           />
-          <meshBasicMaterial
-            attach="material"
-            transparent opacity={0}
-          />
+          <meshBasicMaterial attach="material" transparent opacity={0} />
         </Circle>
       </Center>
     </Canvas>
