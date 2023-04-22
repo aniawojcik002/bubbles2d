@@ -12,10 +12,7 @@ import "./App.css";
 import { MathUtils } from "three";
 
 function App() {
-  // const r = Math.floor(minRGB + Math.random() * (maxRGB - minRGB))
-  // const g = Math.floor(minRGB + Math.random() * (maxRGB - minRGB))
-  // const b = Math.floor(minRGB + Math.random() * (maxRGB - minRGB))
-  // const color = `rgba(${r},${g},${b},${alpha})`
+
   function GetRandomColor() {
     let red = MathUtils.randInt(0, 256);
     let green = MathUtils.randInt(0, 256);
@@ -24,12 +21,13 @@ function App() {
     return color;
   }
   const particles = Array.from({ length: 15 }, () => ({
-    speed: MathUtils.randFloat(0.001, 0.005),
-    xFactor: MathUtils.randFloatSpread(0.02),
-    yFactor: MathUtils.randFloatSpread(0.02),
+    gravity: 0.001,
+    friction: 0.99,
+    xVelocity: MathUtils.randFloatSpread(0.02),
+    yVelocity: MathUtils.randFloatSpread(0.02),
   }));
 
-  function Bubbles({ xFactor, yFactor }) {
+  function Bubbles({ xVelocity, yVelocity }) {
     const ref = useRef();
 
     return (
@@ -49,19 +47,15 @@ function App() {
     );
   }
 
-  function Bubble({ speed, xFactor, yFactor }) {
+  function Bubble({ gravity, friction, xVelocity, yVelocity }) {
     const ref = useRef();
-    useEffect(() => {
-      ref.current.position.set(
-        (ref.current.position.x += xFactor),
-        (ref.current.position.y += yFactor)
-      );
-    });
+
     useFrame((state) => {
       ref.current.position.set(
-        (ref.current.position.x += xFactor),
-        (ref.current.position.y += yFactor)
-      );
+        ref.current.position.x += xVelocity,
+        ref.current.position.y += yVelocity,
+        );
+        yVelocity -= gravity;
       const X_i = ref.current.position.x;
       const Y_i = ref.current.position.y;
 
@@ -71,15 +65,16 @@ function App() {
         let dx = 0 - X_i;
         let dy = 0 - Y_i;
         let len = Math.hypot(dx, dy);
-        console.log(Math.hypot(3, 4));
+
         let nx = dx / len;
         let ny = dy / len;
+        yVelocity *= friction;
+        //velocity after reflection
+        const xVelocity_new = xVelocity - 2 * (nx * xVelocity + ny * yVelocity) * nx;
+        const yVelocity_new = yVelocity - 2 * (nx * xVelocity + ny * yVelocity) * ny;
 
-        const xFactor_new = xFactor - 2 * (nx * xFactor + ny * yFactor) * nx;
-        const yFactor_new = yFactor - 2 * (nx * xFactor + ny * yFactor) * ny;
-
-        xFactor = xFactor_new;
-        yFactor = yFactor_new;
+        xVelocity = xVelocity_new;
+        yVelocity = yVelocity_new;
       }
     });
     return <Instance ref={ref} color={GetRandomColor()} />;
