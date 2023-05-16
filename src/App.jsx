@@ -105,7 +105,7 @@ function App() {
   });
 
   function Bubbles() {
-    const ref = useRef(Array.from({ length: 40 }, () => createRef()));
+    const ref = useRef(Array.from({ length: 40 }, () => useRef(null)));
 
     const particles = Array.from({ length: 40 }, () => ({
       //default value for animation
