@@ -14,6 +14,6 @@ Napotkane problemy:
 -> kulki po odbiciu od okręgu wychodzą poza okręg: Problem rozwiązano korekcją pozycji piłki po odbiciu od okręgu, aby piłeczki zostawały w nim.
 
 Największym wyzwaniem dla mnie w tym zadaniu była komunikacja między komponentem rodzicem, w tym wypadku Bubbles i dzieckiem Bubble, tak aby przekazywać aktualne pozycję i prędkość z komponentu Bubble do Bubbles.
-W tym celu wykorzystano hook useImperativeHandle. 
+W tym celu wykorzystano hook useImperativeHandle i forwardRef. 
 
 Dalszą możliwością rozwijania rozwiązania jest wykorzystanie quadtree algotrytmu.
